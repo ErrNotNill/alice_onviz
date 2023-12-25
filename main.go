@@ -6,12 +6,6 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"github.com/go-oauth2/oauth2/v4"
-	"github.com/go-oauth2/oauth2/v4/errors"
-	"github.com/go-oauth2/oauth2/v4/manage"
-	"github.com/go-oauth2/oauth2/v4/models"
-	"github.com/go-oauth2/oauth2/v4/server"
-	"github.com/go-oauth2/oauth2/v4/store"
 	"html/template"
 	"io"
 	"log"
@@ -29,52 +23,6 @@ var (
 func main() {
 
 	InitRouter()
-
-	manager := manage.NewDefaultManager()
-	// token memory store
-	manager.MustTokenStorage(store.NewMemoryTokenStore())
-
-	// client memory store
-	clientStore := store.NewClientStore()
-	clientStore.Set("4fed8408c435482b950afeb2d6e0f3cc", &models.Client{
-		ID:     "4fed8408c435482b950afeb2d6e0f3cc",
-		Secret: "4fed8408c435482b950afeb2d6e0f3cc",
-		Domain: "https://onviz-api.ru",
-	})
-	manager.MapClientStorage(clientStore)
-
-	srv := server.NewDefaultServer(manager)
-	srv.SetAllowGetAccessRequest(true)
-	srv.SetClientInfoHandler(server.ClientFormHandler)
-
-	srv.SetInternalErrorHandler(func(err error) (re *errors.Response) {
-		log.Println("Internal Error:", err.Error())
-		return
-	})
-
-	srv.SetResponseErrorHandler(func(re *errors.Response) {
-		log.Println("Response Error:", re.Error.Error())
-	})
-
-	http.HandleFunc("/api/authorize", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Println("Authorization Request")
-		http.Redirect(w, r, "https://social.yandex.net/broker/redirect", http.StatusFound)
-		err := srv.HandleAuthorizeRequest(w, r)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
-		}
-		srv.CheckGrantType(oauth2.GrantType(oauth2.Code))
-	})
-
-	http.HandleFunc("/api/token", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Println("Token request <>")
-		err := srv.HandleTokenRequest(w, r)
-		if err != nil {
-			log.Println("ErrHandleTokenRequest<> ")
-		}
-
-	})
-
 	log.Fatal(http.ListenAndServe(":9090", nil))
 }
 
@@ -112,6 +60,47 @@ func InitRouter() {
 	http.HandleFunc("/api/access_token", AccessToken)
 	http.HandleFunc("/api/refresh_token", RefreshToken)
 
+	http.HandleFunc("/api/yandex_id_token", YandexIdToken)
+
+}
+
+// here we get token
+func YandexIdToken(w http.ResponseWriter, r *http.Request) {
+	//https://onviz-api.ru/api/yandex/token
+}
+
+func ReadEmailFromLoginPageAndRedirect(w http.ResponseWriter, r *http.Request) {
+	body := []byte(``)
+	req, _ := http.NewRequest("POST", "https://oauth.yandex.ru/authorize?response_type=token&client_id=4fed8408c435482b950afeb2d6e0f3cc", bytes.NewReader(body))
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		log.Println(err)
+	}
+	fmt.Println("access_token:>", req.URL.Query().Get("access_token"))
+	fmt.Println("token_type:>", req.URL.Query().Get("token_type"))
+	fmt.Println("expires_in:>", req.URL.Query().Get("expires_in"))
+
+	var i interface{}
+	bs, _ := io.ReadAll(r.Body)
+	fmt.Println("string(bs)>", string(bs))
+	err = json.Unmarshal(bs, &i)
+	if err != nil {
+		log.Println("Err ", err.Error())
+		return
+	}
+	log.Println("i:", i)
+	log.Println("resp:", string(bs))
+	defer resp.Body.Close()
+}
+
+func LoginPage(w http.ResponseWriter, r *http.Request) {
+	email := r.Form.Get("email")
+	UserEmail = email
+	ts, err := template.ParseFiles("login.html")
+	if err != nil {
+		log.Println("error:", err)
+	}
+	ts.Execute(w, r)
 }
 
 func GetFirstAuthValues(w http.ResponseWriter, r *http.Request) {
@@ -135,51 +124,6 @@ func RefreshToken(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("codeForRefreshToken:>", codeForAccessToken)
 	rdr, _ := io.ReadAll(r.Body)
 	fmt.Println("string(rdr), access_token:>", string(rdr))
-}
-
-func ReadEmailFromLoginPageAndRedirect(w http.ResponseWriter, r *http.Request) {
-	code, _ := generateRandomString()
-	urlForRedirect := fmt.Sprintf("https://social.yandex.net/broker/redirect?%v&state=%v&client_id%v", code, State, ClientId)
-
-	fmt.Println("urlForRedirect:>", urlForRedirect)
-	rdr, _ := io.ReadAll(r.Body)
-	if rdr != nil {
-		body := []byte(``)
-		req, _ := http.NewRequest("POST", "https://social.yandex.net/broker/redirect", bytes.NewReader(body))
-		req.Header.Set("code", code)
-		req.Header.Set("state", State)
-		req.Header.Set("client_id", ClientId)
-
-		fmt.Println("req:>", req)
-
-		resp, err := http.DefaultClient.Do(req)
-		if err != nil {
-			log.Println(err)
-		}
-
-		var i interface{}
-		bs, _ := io.ReadAll(r.Body)
-		err = json.Unmarshal(bs, &i)
-		if err != nil {
-			log.Println("Err ", err.Error())
-			return
-		}
-		log.Println("i:", i)
-		log.Println("resp:", string(bs))
-		defer resp.Body.Close()
-	}
-	log.Println("string(rdr) ReadEmailFromLoginPageAndRedirect :", string(rdr))
-
-}
-
-func LoginPage(w http.ResponseWriter, r *http.Request) {
-	email := r.Form.Get("email")
-	UserEmail = email
-	ts, err := template.ParseFiles("login.html")
-	if err != nil {
-		log.Println("error:", err)
-	}
-	ts.Execute(w, r)
 }
 
 func generateRandomString() (string, error) {
