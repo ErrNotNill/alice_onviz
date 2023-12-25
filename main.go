@@ -7,13 +7,12 @@ import (
 )
 
 func main() {
-
+	fmt.Println("FirstAuthValuesInterface", FirstAuthValuesInterface)
 	InitRouter()
 	err := http.ListenAndServe(":9090", nil)
 	if err != nil {
 		log.Println("Error listening...")
 	}
-	fmt.Println("FirstAuthValuesInterface", FirstAuthValuesInterface)
 
 }
 
