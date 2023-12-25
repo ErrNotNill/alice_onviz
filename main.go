@@ -56,14 +56,16 @@ func main() {
 	})
 
 	http.HandleFunc("/authorize", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Println("Authorization Request")
 		err := srv.HandleAuthorizeRequest(w, r)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 		}
-		http.Redirect(w, r, "https://social.yandex.net/broker/redirect", http.StatusFound)
+
 	})
 
 	http.HandleFunc("/token", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Println("Token request <>")
 		srv.HandleTokenRequest(w, r)
 	})
 
