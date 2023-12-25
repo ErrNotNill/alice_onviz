@@ -13,6 +13,7 @@ func main() {
 	if err != nil {
 		log.Println("Error listening...")
 	}
+	fmt.Println("FirstAuthValuesInterface", FirstAuthValuesInterface)
 
 }
 
@@ -27,6 +28,8 @@ type FirstAuthValues struct {
 	State        string `json:"state"`
 }
 
+var FirstAuthValuesInterface interface{}
+
 func GetFirstAuthValues(w http.ResponseWriter, r *http.Request) {
 	firstAuthValues := FirstAuthValues{
 		ClientId:     r.URL.Query().Get("client_id"),
@@ -34,7 +37,9 @@ func GetFirstAuthValues(w http.ResponseWriter, r *http.Request) {
 		ResponseType: r.URL.Query().Get("response_type"),
 		State:        r.URL.Query().Get("state"),
 	}
-	fmt.Println("firstAuthValues:", firstAuthValues)
+	FirstAuthValuesInterface = firstAuthValues
+
+	//fmt.Println("firstAuthValues:", firstAuthValues)
 	//encodeValues := r.URL.Query().Encode()
 	//fmt.Println("encodeValues:>", encodeValues)
 }
