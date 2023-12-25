@@ -97,14 +97,23 @@ func ReadEmailFromLoginPageAndRedirect(w http.ResponseWriter, r *http.Request) {
 	rdr, _ := io.ReadAll(r.Body)
 	if rdr != nil {
 		body := []byte(``)
-		req, _ := http.NewRequest("POST", urlForRedirect, bytes.NewReader(body))
+		req, _ := http.NewRequest("POST", "https://social.yandex.net/broker/redirect", bytes.NewReader(body))
+		req.Header.Add("code", code)
+		req.Header.Add("state", State)
+		req.Header.Add("client_id", ClientId)
+
 		resp, err := http.DefaultClient.Do(req)
 		if err != nil {
 			log.Println(err)
 		}
 		var i interface{}
 		bs, _ := io.ReadAll(r.Body)
-		json.Unmarshal(bs, &i)
+		err = json.Unmarshal(bs, &i)
+		if err != nil {
+			log.Println("Err ", err.Error())
+			return
+		}
+
 		log.Println("resp:", string(bs))
 		defer resp.Body.Close()
 	}
