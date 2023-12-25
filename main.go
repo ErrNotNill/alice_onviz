@@ -67,7 +67,10 @@ func main() {
 
 	http.HandleFunc("/api/token", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Token request <>")
-		srv.HandleTokenRequest(w, r)
+		err := srv.HandleTokenRequest(w, r)
+		if err != nil {
+			log.Println("ErrHandleTokenRequest<> ")
+		}
 
 	})
 
