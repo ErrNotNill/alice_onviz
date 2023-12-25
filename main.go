@@ -34,12 +34,12 @@ type FirstAuthValues struct {
 var FirstAuthValuesInterface interface{}
 
 func GetFirstAuthValues(w http.ResponseWriter, r *http.Request) {
-	if r.Method == "POST" {
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusOK)
-	}
+
 	rdr, _ := io.ReadAll(r.Body)
 	fmt.Println(string(rdr))
+	if rdr != nil {
+		http.Redirect(w, r, "https://oauth.yandex.ru/authorize?client_id=4fed8408c435482b950afeb2d6e0f3cc&client_secret=dbb4420ab51f41fc86a2dedd37d2302b", http.StatusFound)
+	}
 
 	firstAuthValues := FirstAuthValues{
 		ClientId:     r.URL.Query().Get("client_id"),
