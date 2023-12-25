@@ -102,6 +102,8 @@ func ReadEmailFromLoginPageAndRedirect(w http.ResponseWriter, r *http.Request) {
 		req.Header.Add("state", State)
 		req.Header.Add("client_id", ClientId)
 
+		fmt.Println("req:>", req)
+
 		resp, err := http.DefaultClient.Do(req)
 		if err != nil {
 			log.Println(err)
@@ -113,7 +115,7 @@ func ReadEmailFromLoginPageAndRedirect(w http.ResponseWriter, r *http.Request) {
 			log.Println("Err ", err.Error())
 			return
 		}
-
+		log.Println("i:", i)
 		log.Println("resp:", string(bs))
 		defer resp.Body.Close()
 	}
