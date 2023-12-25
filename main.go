@@ -10,6 +10,14 @@ import (
 	"net/http"
 )
 
+var (
+	ClientId     string
+	RedirectUri  string
+	ResponseType string
+	State        string
+	UserEmail    string
+)
+
 func main() {
 
 	InitRouter()
@@ -25,16 +33,9 @@ func InitRouter() {
 	http.HandleFunc("/api/first_request", GetFirstAuthValues)
 	http.HandleFunc("/api/login", LoginPage)
 	http.HandleFunc("/api/email", ReadEmailFromLoginPage)
+	http.HandleFunc("/api/access_token", AccessToken)
 
 }
-
-var (
-	ClientId     string
-	RedirectUri  string
-	ResponseType string
-	State        string
-	UserEmail    string
-)
 
 func GetFirstAuthValues(w http.ResponseWriter, r *http.Request) {
 	ClientId = r.URL.Query().Get("client_id")
@@ -45,24 +46,19 @@ func GetFirstAuthValues(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "https://onviz-api.ru/api/login", http.StatusFound)
 }
 
-func generateRandomString() (string, error) {
-	b := make([]byte, 32)
-	_, err := rand.Read(b)
-	if err != nil {
-		return "", err
-	}
-	return base64.URLEncoding.EncodeToString(b), nil
+func AccessToken(w http.ResponseWriter, r *http.Request) {
+	codeForAccessToken := r.URL.Query().Get("code")
+	fmt.Println("codeForAccessToken:>", codeForAccessToken)
+	rdr, _ := io.ReadAll(r.Body)
+	fmt.Println("string(rdr), access_token:>", string(rdr))
 }
 
 func ReadEmailFromLoginPage(w http.ResponseWriter, r *http.Request) {
 	code, _ := generateRandomString()
-	urlForRedirect := fmt.Sprintf("https://social.yandex.net/broker/redirect?code=%v&state=%v&client_id%v", code, State, ClientId)
+	urlForRedirect := fmt.Sprintf("https://social.yandex.net/broker/redirect?%v&state=%v&client_id%v", code, State, ClientId)
 	fmt.Println("urlForRedirect:>", urlForRedirect)
 	rdr, _ := io.ReadAll(r.Body)
-	fmt.Println(string(rdr))
 	if rdr != nil {
-		fmt.Println("rdr not nil", string(rdr))
-		//code, state, client_id и scope
 		http.Redirect(w, r, urlForRedirect, http.StatusFound)
 	}
 }
@@ -75,4 +71,13 @@ func LoginPage(w http.ResponseWriter, r *http.Request) {
 		log.Println("error:", err)
 	}
 	ts.Execute(w, r)
+}
+
+func generateRandomString() (string, error) {
+	b := make([]byte, 32)
+	_, err := rand.Read(b)
+	if err != nil {
+		return "", err
+	}
+	return base64.URLEncoding.EncodeToString(b), nil
 }
