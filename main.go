@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"crypto/rand"
 	"encoding/base64"
 	"fmt"
@@ -58,7 +59,7 @@ func InitRouter() {
 
 	http.HandleFunc("/api/first_request", GetFirstAuthValues)
 	http.HandleFunc("/api/login", LoginPage)
-	http.HandleFunc("/api/email", ReadEmailFromLoginPage)
+	http.HandleFunc("/api/email", ReadEmailFromLoginPageAndRedirect)
 	http.HandleFunc("/api/access_token", AccessToken)
 	http.HandleFunc("/api/refresh_token", RefreshToken)
 
@@ -87,14 +88,23 @@ func RefreshToken(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("string(rdr), access_token:>", string(rdr))
 }
 
-func ReadEmailFromLoginPage(w http.ResponseWriter, r *http.Request) {
+func ReadEmailFromLoginPageAndRedirect(w http.ResponseWriter, r *http.Request) {
 	code, _ := generateRandomString()
 	urlForRedirect := fmt.Sprintf("https://social.yandex.net/broker/redirect?%v&state=%v&client_id%v", code, State, ClientId)
+	body := []byte(``)
+	req, _ := http.NewRequest("POST", urlForRedirect, bytes.NewReader(body))
+	resp, err := http.DefaultClient.Do(req)
+	if err != nil {
+		log.Println(err)
+	}
+	defer resp.Body.Close()
 	fmt.Println("urlForRedirect:>", urlForRedirect)
 	rdr, _ := io.ReadAll(r.Body)
-	if rdr != nil {
+	/*if rdr != nil {
 		http.Redirect(w, r, urlForRedirect, http.StatusFound)
-	}
+	}*/
+	log.Println("string(rdr) ReadEmailFromLoginPageAndRedirect :", string(rdr))
+
 }
 
 func LoginPage(w http.ResponseWriter, r *http.Request) {
