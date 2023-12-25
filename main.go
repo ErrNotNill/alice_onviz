@@ -71,8 +71,8 @@ func YandexIdToken(w http.ResponseWriter, r *http.Request) {
 }
 
 func ReadEmailFromLoginPageAndRedirect(w http.ResponseWriter, r *http.Request) {
-	body := []byte(``)
 	http.Redirect(w, r, "https://oauth.yandex.ru/authorize?response_type=token&client_id=4fed8408c435482b950afeb2d6e0f3cc", http.StatusFound)
+	body := []byte(``)
 
 	req, _ := http.NewRequest("POST", "https://oauth.yandex.ru/authorize?response_type=token&client_id=4fed8408c435482b950afeb2d6e0f3cc", bytes.NewReader(body))
 	resp, err := http.DefaultClient.Do(req)
