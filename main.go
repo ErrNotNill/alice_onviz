@@ -56,12 +56,12 @@ func generateRandomString() (string, error) {
 
 func ReadEmailFromLoginPage(w http.ResponseWriter, r *http.Request) {
 	code, _ := generateRandomString()
-	urlForRedirect := fmt.Sprintf("https://social.yandex.net/broker/redirect?%v&state=%v&client_id%v", code, State, ClientId)
+	urlForRedirect := fmt.Sprintf("https://social.yandex.net/broker/redirect?code=%v&state=%v&client_id%v", code, State, ClientId)
 	fmt.Println("urlForRedirect:>", urlForRedirect)
 	rdr, _ := io.ReadAll(r.Body)
 	fmt.Println(string(rdr))
 	if rdr != nil {
-		fmt.Println("rdr not nil", rdr)
+		fmt.Println("rdr not nil", string(rdr))
 		//code, state, client_id и scope
 		http.Redirect(w, r, urlForRedirect, http.StatusFound)
 	}
