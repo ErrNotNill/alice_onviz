@@ -60,6 +60,7 @@ func InitRouter() {
 	http.HandleFunc("/api/login", LoginPage)
 	http.HandleFunc("/api/email", ReadEmailFromLoginPage)
 	http.HandleFunc("/api/access_token", AccessToken)
+	http.HandleFunc("/api/refresh_token", RefreshToken)
 
 }
 
@@ -75,6 +76,13 @@ func GetFirstAuthValues(w http.ResponseWriter, r *http.Request) {
 func AccessToken(w http.ResponseWriter, r *http.Request) {
 	codeForAccessToken := r.URL.Query().Get("code")
 	fmt.Println("codeForAccessToken:>", codeForAccessToken)
+	rdr, _ := io.ReadAll(r.Body)
+	fmt.Println("string(rdr), access_token:>", string(rdr))
+}
+
+func RefreshToken(w http.ResponseWriter, r *http.Request) {
+	codeForAccessToken := r.URL.Query().Get("code")
+	fmt.Println("codeForRefreshToken:>", codeForAccessToken)
 	rdr, _ := io.ReadAll(r.Body)
 	fmt.Println("string(rdr), access_token:>", string(rdr))
 }
