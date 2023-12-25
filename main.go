@@ -60,6 +60,7 @@ func main() {
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 		}
+		http.Redirect(w, r, "https://social.yandex.net/broker/redirect", http.StatusFound)
 	})
 
 	http.HandleFunc("/token", func(w http.ResponseWriter, r *http.Request) {
