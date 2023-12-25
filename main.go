@@ -1,6 +1,8 @@
 package main
 
 import (
+	"crypto/rand"
+	"encoding/base64"
 	"fmt"
 	"html/template"
 	"io"
@@ -20,41 +22,49 @@ func main() {
 
 func InitRouter() {
 
-	http.HandleFunc("/api/login", LoginPage)
 	http.HandleFunc("/api/first_request", GetFirstAuthValues)
+	http.HandleFunc("/api/login", LoginPage)
+	http.HandleFunc("/api/email", ReadEmailFromLoginPage)
+
 }
 
-type FirstAuthValues struct {
-	ClientId     string `json:"client_id"`
-	RedirectUri  string `json:"redirect_uri"`
-	ResponseType string `json:"response_type"`
-	State        string `json:"state"`
-}
-
-var FirstAuthValuesInterface interface{}
+var (
+	ClientId     string
+	RedirectUri  string
+	ResponseType string
+	State        string
+	UserEmail    string
+)
 
 func GetFirstAuthValues(w http.ResponseWriter, r *http.Request) {
+	ClientId = r.URL.Query().Get("client_id")
+	RedirectUri = r.URL.Query().Get("redirect_uri")
+	ResponseType = r.URL.Query().Get("response_type")
+	State = r.URL.Query().Get("state")
+
+	http.Redirect(w, r, "https://onviz-api.ru/api/login", http.StatusFound)
+}
+
+func generateRandomString() (string, error) {
+	b := make([]byte, 32)
+	_, err := rand.Read(b)
+	if err != nil {
+		return "", err
+	}
+	return base64.URLEncoding.EncodeToString(b), nil
+}
+
+func ReadEmailFromLoginPage(w http.ResponseWriter, r *http.Request) {
+	code, _ := generateRandomString()
+	urlForRedirect := fmt.Sprintf("https://social.yandex.net/broker/redirect?%v&state=%v&client_id%v", code, State, ClientId)
 
 	rdr, _ := io.ReadAll(r.Body)
 	fmt.Println(string(rdr))
 	if rdr != nil {
-		http.Redirect(w, r, "https://oauth.yandex.ru/authorize?client_id=4fed8408c435482b950afeb2d6e0f3cc&client_secret=dbb4420ab51f41fc86a2dedd37d2302b", http.StatusFound)
+		//code, state, client_id и scope
+		http.Redirect(w, r, urlForRedirect, http.StatusFound)
 	}
-
-	firstAuthValues := FirstAuthValues{
-		ClientId:     r.URL.Query().Get("client_id"),
-		RedirectUri:  r.URL.Query().Get("redirect_uri"),
-		ResponseType: r.URL.Query().Get("response_type"),
-		State:        r.URL.Query().Get("state"),
-	}
-	FirstAuthValuesInterface = firstAuthValues
-
-	//fmt.Println("firstAuthValues:", firstAuthValues)
-	//encodeValues := r.URL.Query().Encode()
-	//fmt.Println("encodeValues:>", encodeValues)
 }
-
-var UserEmail string
 
 func LoginPage(w http.ResponseWriter, r *http.Request) {
 	email := r.Form.Get("email")
