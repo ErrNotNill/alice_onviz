@@ -21,6 +21,7 @@ func InitRouter() {
 }
 
 func HandleAlice(w http.ResponseWriter, r *http.Request) {
+	fmt.Println(r.URL.Query())
 	encodeValues := r.URL.Query().Encode()
 	fmt.Println("encodeValues:>", encodeValues)
 }
