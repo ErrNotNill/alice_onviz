@@ -61,6 +61,7 @@ func ReadEmailFromLoginPage(w http.ResponseWriter, r *http.Request) {
 	rdr, _ := io.ReadAll(r.Body)
 	fmt.Println(string(rdr))
 	if rdr != nil {
+		fmt.Println("rdr not nil", rdr)
 		//code, state, client_id и scope
 		http.Redirect(w, r, urlForRedirect, http.StatusFound)
 	}
