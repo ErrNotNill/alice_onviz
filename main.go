@@ -37,7 +37,7 @@ func main() {
 	clientStore := store.NewClientStore()
 	clientStore.Set("4fed8408c435482b950afeb2d6e0f3cc", &models.Client{
 		ID:     "4fed8408c435482b950afeb2d6e0f3cc",
-		Secret: "",
+		Secret: "4fed8408c435482b950afeb2d6e0f3cc",
 		Domain: "http://localhost",
 	})
 	manager.MapClientStorage(clientStore)
