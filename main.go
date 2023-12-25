@@ -91,18 +91,18 @@ func RefreshToken(w http.ResponseWriter, r *http.Request) {
 func ReadEmailFromLoginPageAndRedirect(w http.ResponseWriter, r *http.Request) {
 	code, _ := generateRandomString()
 	urlForRedirect := fmt.Sprintf("https://social.yandex.net/broker/redirect?%v&state=%v&client_id%v", code, State, ClientId)
-	body := []byte(``)
-	req, _ := http.NewRequest("POST", urlForRedirect, bytes.NewReader(body))
-	resp, err := http.DefaultClient.Do(req)
-	if err != nil {
-		log.Println(err)
-	}
-	defer resp.Body.Close()
+
 	fmt.Println("urlForRedirect:>", urlForRedirect)
 	rdr, _ := io.ReadAll(r.Body)
-	/*if rdr != nil {
-		http.Redirect(w, r, urlForRedirect, http.StatusFound)
-	}*/
+	if rdr != nil {
+		body := []byte(``)
+		req, _ := http.NewRequest("POST", urlForRedirect, bytes.NewReader(body))
+		resp, err := http.DefaultClient.Do(req)
+		if err != nil {
+			log.Println(err)
+		}
+		defer resp.Body.Close()
+	}
 	log.Println("string(rdr) ReadEmailFromLoginPageAndRedirect :", string(rdr))
 
 }
