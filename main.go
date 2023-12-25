@@ -28,7 +28,33 @@ func main() {
 
 }
 
+func CheckAccessForEndpoint(w http.ResponseWriter, r *http.Request) {
+	rdr, _ := io.ReadAll(r.Body)
+	fmt.Println("string(rdr) CheckAccessForEndpoint", string(rdr))
+}
+func CallThatUserUnlink(w http.ResponseWriter, r *http.Request) {
+	rdr, _ := io.ReadAll(r.Body)
+	fmt.Println("string(rdr) CallThatUserUnlink", string(rdr))
+}
+func InfoAboutUserDevices(w http.ResponseWriter, r *http.Request) {
+	rdr, _ := io.ReadAll(r.Body)
+	fmt.Println("string(rdr) InfoAboutUserDevices", string(rdr))
+}
+func InfoAboutUserDevicesState(w http.ResponseWriter, r *http.Request) {
+	rdr, _ := io.ReadAll(r.Body)
+	fmt.Println("string(rdr) InfoAboutUserDevicesState", string(rdr))
+}
+func ChangeDevicesState(w http.ResponseWriter, r *http.Request) {
+	rdr, _ := io.ReadAll(r.Body)
+	fmt.Println("string(rdr) ChangeDevicesState", string(rdr))
+}
+
 func InitRouter() {
+	http.HandleFunc("/api/v1.0/", CheckAccessForEndpoint)
+	http.HandleFunc("/api/v1.0/user/unlink", CallThatUserUnlink)
+	http.HandleFunc("/api/v1.0/user/devices", InfoAboutUserDevices)
+	http.HandleFunc("/api/v1.0/user/devices/query", InfoAboutUserDevicesState)
+	http.HandleFunc("/v1.0/user/devices/action", ChangeDevicesState)
 
 	http.HandleFunc("/api/first_request", GetFirstAuthValues)
 	http.HandleFunc("/api/login", LoginPage)
