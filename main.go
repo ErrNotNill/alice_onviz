@@ -39,7 +39,7 @@ func main() {
 	clientStore.Set("4fed8408c435482b950afeb2d6e0f3cc", &models.Client{
 		ID:     "4fed8408c435482b950afeb2d6e0f3cc",
 		Secret: "4fed8408c435482b950afeb2d6e0f3cc",
-		Domain: "http://localhost",
+		Domain: "https://onviz-api.ru",
 	})
 	manager.MapClientStorage(clientStore)
 
