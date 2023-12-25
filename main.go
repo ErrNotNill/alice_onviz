@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/gorilla/schema"
+	"fmt"
 	"log"
 	"net/http"
 )
@@ -34,9 +34,7 @@ func GetFirstAuthValues(w http.ResponseWriter, r *http.Request) {
 		ResponseType: r.URL.Query().Get("response_type"),
 		State:        r.URL.Query().Get("state"),
 	}
-	if err := schema.NewDecoder().Decode(firstAuthValues, r.Form); err != nil {
-		log.Println("Error decoding filter")
-	}
+	fmt.Println("firstAuthValues:", firstAuthValues)
 	//encodeValues := r.URL.Query().Encode()
 	//fmt.Println("encodeValues:>", encodeValues)
 }
