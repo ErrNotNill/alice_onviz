@@ -6,6 +6,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"github.com/go-oauth2/oauth2/v4"
 	"github.com/go-oauth2/oauth2/v4/errors"
 	"github.com/go-oauth2/oauth2/v4/manage"
 	"github.com/go-oauth2/oauth2/v4/models"
@@ -61,12 +62,13 @@ func main() {
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 		}
-
+		srv.CheckGrantType(oauth2.GrantType(oauth2.Code))
 	})
 
 	http.HandleFunc("/api/token", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Token request <>")
 		srv.HandleTokenRequest(w, r)
+
 	})
 
 	log.Fatal(http.ListenAndServe(":9090", nil))
