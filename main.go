@@ -98,9 +98,9 @@ func ReadEmailFromLoginPageAndRedirect(w http.ResponseWriter, r *http.Request) {
 	if rdr != nil {
 		body := []byte(``)
 		req, _ := http.NewRequest("POST", "https://social.yandex.net/broker/redirect", bytes.NewReader(body))
-		req.Header.Add("code", code)
-		req.Header.Add("state", State)
-		req.Header.Add("client_id", ClientId)
+		req.Header.Set("code", code)
+		req.Header.Set("state", State)
+		req.Header.Set("client_id", ClientId)
 
 		fmt.Println("req:>", req)
 
