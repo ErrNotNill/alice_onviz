@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"crypto/rand"
 	"encoding/base64"
+	"encoding/json"
 	"fmt"
 	"html/template"
 	"io"
@@ -101,6 +102,10 @@ func ReadEmailFromLoginPageAndRedirect(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Println(err)
 		}
+		var i interface{}
+		bs, _ := io.ReadAll(r.Body)
+		json.Unmarshal(bs, &i)
+		log.Println("resp:", string(bs))
 		defer resp.Body.Close()
 	}
 	log.Println("string(rdr) ReadEmailFromLoginPageAndRedirect :", string(rdr))
