@@ -34,6 +34,10 @@ type FirstAuthValues struct {
 var FirstAuthValuesInterface interface{}
 
 func GetFirstAuthValues(w http.ResponseWriter, r *http.Request) {
+	if r.Method == "POST" {
+		w.Header().Set("Content-Type", "application")
+		w.WriteHeader(http.StatusOK)
+	}
 	rdr, _ := io.ReadAll(r.Body)
 	fmt.Println(string(rdr))
 
