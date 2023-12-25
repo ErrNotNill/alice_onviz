@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 )
@@ -20,5 +21,6 @@ func InitRouter() {
 }
 
 func HandleAlice(w http.ResponseWriter, r *http.Request) {
-
+	encodeValues := r.URL.Query().Encode()
+	fmt.Println("encodeValues:>", encodeValues)
 }
