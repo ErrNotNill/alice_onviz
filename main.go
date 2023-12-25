@@ -55,7 +55,7 @@ func main() {
 		log.Println("Response Error:", re.Error.Error())
 	})
 
-	http.HandleFunc("/authorize", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/api/authorize", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Authorization Request")
 		err := srv.HandleAuthorizeRequest(w, r)
 		if err != nil {
@@ -64,7 +64,7 @@ func main() {
 
 	})
 
-	http.HandleFunc("/token", func(w http.ResponseWriter, r *http.Request) {
+	http.HandleFunc("/api/token", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Token request <>")
 		srv.HandleTokenRequest(w, r)
 	})
