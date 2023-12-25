@@ -1,7 +1,7 @@
 package main
 
 import (
-	"fmt"
+	"github.com/gorilla/schema"
 	"log"
 	"net/http"
 )
@@ -17,20 +17,26 @@ func main() {
 }
 
 func InitRouter() {
-	http.HandleFunc("/api/first_request", HandleAlice)
+	http.HandleFunc("/api/first_request", GetFirstAuthValues)
 }
 
-func HandleAlice(w http.ResponseWriter, r *http.Request) {
-	fmt.Println(r.URL.Query())
-	client_id := r.URL.Query().Get("client_id")
-	redirect_uri := r.URL.Query().Get("redirect_uri")
-	response_type := r.URL.Query().Get("response_type")
-	state := r.URL.Query().Get("state")
-	fmt.Println("client_id:>", client_id)
-	fmt.Println("redirect_uri:>", redirect_uri)
-	fmt.Println("response_type:>", response_type)
-	fmt.Println("state:>", state)
+type FirstAuthValues struct {
+	ClientId     string `json:"client_id"`
+	RedirectUri  string `json:"redirect_uri"`
+	ResponseType string `json:"response_type"`
+	State        string `json:"state"`
+}
 
+func GetFirstAuthValues(w http.ResponseWriter, r *http.Request) {
+	firstAuthValues := FirstAuthValues{
+		ClientId:     r.URL.Query().Get("client_id"),
+		RedirectUri:  r.URL.Query().Get("redirect_uri"),
+		ResponseType: r.URL.Query().Get("response_type"),
+		State:        r.URL.Query().Get("state"),
+	}
+	if err := schema.NewDecoder().Decode(firstAuthValues, r.Form); err != nil {
+		log.Println("Error decoding filter")
+	}
 	//encodeValues := r.URL.Query().Encode()
 	//fmt.Println("encodeValues:>", encodeValues)
 }
