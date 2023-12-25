@@ -6,6 +6,11 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"github.com/go-oauth2/oauth2/v4/errors"
+	"github.com/go-oauth2/oauth2/v4/manage"
+	"github.com/go-oauth2/oauth2/v4/models"
+	"github.com/go-oauth2/oauth2/v4/server"
+	"github.com/go-oauth2/oauth2/v4/store"
 	"html/template"
 	"io"
 	"log"
@@ -23,11 +28,45 @@ var (
 func main() {
 
 	InitRouter()
-	err := http.ListenAndServe(":9090", nil)
-	if err != nil {
-		log.Println("Error listening...")
-	}
 
+	manager := manage.NewDefaultManager()
+	// token memory store
+	manager.MustTokenStorage(store.NewMemoryTokenStore())
+
+	// client memory store
+	clientStore := store.NewClientStore()
+	clientStore.Set("4fed8408c435482b950afeb2d6e0f3cc", &models.Client{
+		ID:     "4fed8408c435482b950afeb2d6e0f3cc",
+		Secret: "",
+		Domain: "http://localhost",
+	})
+	manager.MapClientStorage(clientStore)
+
+	srv := server.NewDefaultServer(manager)
+	srv.SetAllowGetAccessRequest(true)
+	srv.SetClientInfoHandler(server.ClientFormHandler)
+
+	srv.SetInternalErrorHandler(func(err error) (re *errors.Response) {
+		log.Println("Internal Error:", err.Error())
+		return
+	})
+
+	srv.SetResponseErrorHandler(func(re *errors.Response) {
+		log.Println("Response Error:", re.Error.Error())
+	})
+
+	http.HandleFunc("/authorize", func(w http.ResponseWriter, r *http.Request) {
+		err := srv.HandleAuthorizeRequest(w, r)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+		}
+	})
+
+	http.HandleFunc("/token", func(w http.ResponseWriter, r *http.Request) {
+		srv.HandleTokenRequest(w, r)
+	})
+
+	log.Fatal(http.ListenAndServe(":9090", nil))
 }
 
 func CheckAccessForEndpoint(w http.ResponseWriter, r *http.Request) {
@@ -108,6 +147,7 @@ func ReadEmailFromLoginPageAndRedirect(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			log.Println(err)
 		}
+
 		var i interface{}
 		bs, _ := io.ReadAll(r.Body)
 		err = json.Unmarshal(bs, &i)
