@@ -58,6 +58,7 @@ func main() {
 
 	http.HandleFunc("/api/authorize", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Println("Authorization Request")
+		http.Redirect(w, r, "https://social.yandex.net/broker/redirect", http.StatusFound)
 		err := srv.HandleAuthorizeRequest(w, r)
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
