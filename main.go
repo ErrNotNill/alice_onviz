@@ -76,8 +76,8 @@ func ReadEmailFromLoginPageAndRedirect(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "https://oauth.yandex.ru/authorize?response_type=code&client_id=4fed8408c435482b950afeb2d6e0f3cc", http.StatusFound)
 	body := []byte(``)
 	fmt.Println("code:>", r.URL.Query().Get("code"))
-	code := r.URL.Query().Get("code")
-	AuthCode = code
+	//code := r.URL.Query().Get("code")
+	//AuthCode = code
 
 	fmt.Println("state:>", r.URL.Query().Get("state"))
 	fmt.Println("scope:>", r.URL.Query().Get("scope"))
@@ -105,6 +105,7 @@ func ReadEmailFromLoginPageAndRedirect(w http.ResponseWriter, r *http.Request) {
 func LoginPage(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("code:>", r.URL.Query().Get("code"))
 
+	AuthCode = r.URL.Query().Get("code")
 	//http.Redirect(w, r, "https://oauth.yandex.ru/authorize?response_type=code&client_id=4fed8408c435482b950afeb2d6e0f3cc&redirect_uri=https://social.yandex.net/broker/redirect", http.StatusFound)
 	email := r.Form.Get("email")
 	UserEmail = email
