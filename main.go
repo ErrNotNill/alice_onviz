@@ -74,19 +74,6 @@ func ReadEmailFromLoginPageAndRedirect(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "https://oauth.yandex.ru/authorize?response_type=code&client_id=4fed8408c435482b950afeb2d6e0f3cc", http.StatusFound)
 	body := []byte(``)
 	fmt.Println("code:>", r.URL.Query().Get("code"))
-	code := r.URL.Query().Get("code")
-
-	reqst, _ := http.NewRequest("POST", "https://social.yandex.net/broker/redirect", bytes.NewReader(body))
-	reqst.Header.Add("code", code)
-	reqst.Header.Add("client_id", "4fed8408c435482b950afeb2d6e0f3cc")
-	//reqst.Header.Add("client_id", "4fed8408c435482b950afeb2d6e0f3cc")
-
-	resps, err := http.DefaultClient.Do(reqst)
-	if err != nil {
-		log.Println(err)
-	}
-	bsread, _ := io.ReadAll(resps.Body)
-	fmt.Println("string(bs)>", string(bsread))
 
 	//fmt.Println("access_token:>", r.URL.Query().Get("access_token"))
 	//fmt.Println("token_type:>", r.URL.Query().Get("token_type"))
@@ -99,7 +86,7 @@ func ReadEmailFromLoginPageAndRedirect(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Println("code:>", req.URL.Query().Get("code"))
 	var i interface{}
-	bs, _ := io.ReadAll(req.Body)
+	bs, _ := io.ReadAll(r.Body)
 	fmt.Println("string(bs)>", string(bs))
 	err = json.Unmarshal(bs, &i)
 	if err != nil {
