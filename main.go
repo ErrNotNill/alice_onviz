@@ -100,7 +100,7 @@ func ReadEmailFromLoginPageAndRedirect(w http.ResponseWriter, r *http.Request) {
 
 func LoginPage(w http.ResponseWriter, r *http.Request) {
 
-	fmt.Println("code:>", r.URL.Query().Get("code"))
+	//fmt.Println("code:>", r.URL.Query().Get("code"))
 	fmt.Println("access_token:>", r.URL.Query().Get("access_token"))
 	fmt.Println("token_type:>", r.URL.Query().Get("token_type"))
 	fmt.Println("expires_in:>", r.URL.Query().Get("expires_in"))
