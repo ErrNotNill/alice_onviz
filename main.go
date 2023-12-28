@@ -103,9 +103,7 @@ func ReadEmailFromLoginPageAndRedirect(w http.ResponseWriter, r *http.Request) {
 }
 
 func LoginPage(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("access_token:>", r.URL.Query().Get("access_token"))
-	fmt.Println("token_type:>", r.URL.Query().Get("token_type"))
-	fmt.Println("expires_in:>", r.URL.Query().Get("expires_in"))
+	fmt.Println("code:>", r.URL.Query().Get("code"))
 
 	//http.Redirect(w, r, "https://oauth.yandex.ru/authorize?response_type=code&client_id=4fed8408c435482b950afeb2d6e0f3cc&redirect_uri=https://social.yandex.net/broker/redirect", http.StatusFound)
 	email := r.Form.Get("email")
