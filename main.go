@@ -101,7 +101,7 @@ func LoginPage(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("token_type:>", r.URL.Query().Get("token_type"))
 	fmt.Println("expires_in:>", r.URL.Query().Get("expires_in"))
 
-	http.Redirect(w, r, "https://oauth.yandex.ru/authorize?response_type=code&client_id=4fed8408c435482b950afeb2d6e0f3cc&redirect_uri=https://social.yandex.net/broker/redirect", http.StatusFound)
+	//http.Redirect(w, r, "https://oauth.yandex.ru/authorize?response_type=code&client_id=4fed8408c435482b950afeb2d6e0f3cc&redirect_uri=https://social.yandex.net/broker/redirect", http.StatusFound)
 	email := r.Form.Get("email")
 	UserEmail = email
 	ts, err := template.ParseFiles("login.html")
