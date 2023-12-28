@@ -73,6 +73,8 @@ func YandexIdToken(w http.ResponseWriter, r *http.Request) {
 func ReadEmailFromLoginPageAndRedirect(w http.ResponseWriter, r *http.Request) {
 	http.Redirect(w, r, "https://oauth.yandex.ru/authorize?response_type=code&client_id=4fed8408c435482b950afeb2d6e0f3cc", http.StatusFound)
 	body := []byte(``)
+	fmt.Println("code:>", r.URL.Query().Get("code"))
+
 	fmt.Println("access_token:>", r.URL.Query().Get("access_token"))
 	fmt.Println("token_type:>", r.URL.Query().Get("token_type"))
 	fmt.Println("expires_in:>", r.URL.Query().Get("expires_in"))
@@ -82,10 +84,7 @@ func ReadEmailFromLoginPageAndRedirect(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		log.Println(err)
 	}
-	fmt.Println("access_token:>", req.URL.Query().Get("access_token"))
-	fmt.Println("token_type:>", req.URL.Query().Get("token_type"))
-	fmt.Println("expires_in:>", req.URL.Query().Get("expires_in"))
-
+	fmt.Println("code:>", req.URL.Query().Get("code"))
 	var i interface{}
 	bs, _ := io.ReadAll(r.Body)
 	fmt.Println("string(bs)>", string(bs))
@@ -100,6 +99,8 @@ func ReadEmailFromLoginPageAndRedirect(w http.ResponseWriter, r *http.Request) {
 }
 
 func LoginPage(w http.ResponseWriter, r *http.Request) {
+
+	fmt.Println("code:>", r.URL.Query().Get("code"))
 	fmt.Println("access_token:>", r.URL.Query().Get("access_token"))
 	fmt.Println("token_type:>", r.URL.Query().Get("token_type"))
 	fmt.Println("expires_in:>", r.URL.Query().Get("expires_in"))
