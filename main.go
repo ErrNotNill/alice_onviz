@@ -83,14 +83,10 @@ func ReadEmailFromLoginPageAndRedirect(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("scope:>", r.URL.Query().Get("scope"))
 	fmt.Println("expires_in:>", r.URL.Query().Get("expires_in"))
 
-	base64str, err := base64.StdEncoding.DecodeString(`4fed8408c435482b950afeb2d6e0f3cc:dbb4420ab51f41fc86a2dedd37d2302b`)
-	if err != nil {
-		log.Println("Err")
-	}
-
+	encodedString := base64.StdEncoding.EncodeToString([]byte(`4fed8408c435482b950afeb2d6e0f3cc:dbb4420ab51f41fc86a2dedd37d2302b`))
 	req, _ := http.NewRequest("POST", "https://oauth.yandex.ru/grant_type=authorization_code&code="+AuthCode, bytes.NewReader(body))
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-	req.Header.Set("Authorization", "Basic "+string(base64str))
+	req.Header.Set("Authorization", "Basic "+string(encodedString))
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
