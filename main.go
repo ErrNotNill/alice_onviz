@@ -73,7 +73,7 @@ func YandexIdToken(w http.ResponseWriter, r *http.Request) {
 var AuthCode string
 
 func ReadEmailFromLoginPageAndRedirect(w http.ResponseWriter, r *http.Request) {
-
+	fmt.Println("code:>", r.URL.Query().Get("code"))
 	reqId := r.Header.Get("X-Request-ID")
 	fmt.Println("reqId:>", reqId)
 
