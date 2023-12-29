@@ -77,8 +77,13 @@ func InfoAboutUserDevices(w http.ResponseWriter, r *http.Request) {
       ]
   }
 }`, reqId)
+	jsonData, err := json.MarshalIndent(newReq, "", "  ")
+	if err != nil {
+		panic(err)
+	}
 
-	w.Write([]byte(newReq))
+	// Print JSON
+	println(string(jsonData))
 
 	rdr, _ := io.ReadAll(r.Body)
 	fmt.Println("string(rdr) InfoAboutUserDevices", string(rdr))
