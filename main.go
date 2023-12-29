@@ -85,8 +85,6 @@ func InfoAboutUserDevices(w http.ResponseWriter, r *http.Request) {
 
 	rdrBody, _ := io.ReadAll(r.Body)
 	fmt.Println("string(rdr) InfoAboutUserDevices", string(rdrBody))
-	respBody, _ := io.ReadAll(r.Response.Body)
-	fmt.Println("string(rdr) InfoAboutUserDevices respBody>>>>", string(respBody))
 
 }
 
