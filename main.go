@@ -40,12 +40,12 @@ func CallThatUserUnlink(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("string(rdr) CallThatUserUnlink", string(rdr))
 }
 func InfoAboutUserDevices(w http.ResponseWriter, r *http.Request) {
-	values := r.Header.Values("X-Request-ID")
-	fmt.Println("values_x_request_id:>", values)
+	reqId := r.Header.Values("X-Request-ID")
+	fmt.Println("values_x_request_id:>", reqId)
 
-	someReq := `
+	newReq := fmt.Sprintf(`
 {
-  "request_id": String,
+  "request_id": %v,
   "payload": {
       "user_id": String,
       "devices": [
@@ -76,8 +76,9 @@ func InfoAboutUserDevices(w http.ResponseWriter, r *http.Request) {
         ...
       ]
   }
-}`
-	w.Write([]byte(someReq))
+}`, reqId)
+
+	w.Write([]byte(newReq))
 
 	rdr, _ := io.ReadAll(r.Body)
 	fmt.Println("string(rdr) InfoAboutUserDevices", string(rdr))
