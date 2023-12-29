@@ -47,32 +47,32 @@ func InfoAboutUserDevices(w http.ResponseWriter, r *http.Request) {
 {
   "request_id": %v,
   "payload": {
-      "user_id": String,
+      "user_id": "onviz123",
       "devices": [
         {
-          "id": String,
-          "name": String,
-          "description": String,
-          "room": String,
-          "type": String,
-          "custom_data": Object,
-          "capabilities": [
-            "<capability1>": Object,
-            "<capability2>": Object,
-            ...
-          ],
-          "properties": [
-            "<property1>": Object,
-            "<property2>": Object,
-            ...
-          ],
-          "device_info": {
-            "manufacturer": String,
-            "model": String,
-            "hw_version": String,
-            "sw_version": String
-          }
-        },
+          ID:          "device1",
+					Name:        "Device 1",
+					Description: "Example device",
+					Room:        "Living Room",
+					Type:        "Smart Light",
+					CustomData: map[string]string{
+						"key1": "value1",
+						"key2": "value2",
+					},
+					Capabilities: map[string]Capability{
+						"capability1": {"on_off", true},
+						"capability2": {"brightness", 50},
+					},
+					Properties: map[string]Property{
+						"property1": {"color", "blue"},
+						"property2": {"temperature", 25},
+					},
+					DeviceInfo: DeviceInfo{
+						Manufacturer: "ABC Corp",
+						Model:        "Model XYZ",
+						HWVersion:    "1.0",
+						SWVersion:    "2.1",
+					},
         ...
       ]
   }
