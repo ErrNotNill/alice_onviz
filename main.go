@@ -74,13 +74,15 @@ var AuthCode string
 
 func GetAuthCode(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("code auth:>", r.URL.Query().Get("code"))
-	//code := r.URL.Query().Get("code")
+	code := r.URL.Query().Get("code")
+	AuthCode = code
 	//uri := fmt.Sprintf("https://social.yandex.net/broker/redirect?response_type=code&client_id=4fed8408c435482b950afeb2d6e0f3cc&redirect_uri=https://onviz-api.ru/api/auth_code")
 	uri := fmt.Sprintf("https://social.yandex.net/broker/redirect?code=%v&state=%v&client_id=%v", AuthCode, State, ClientID)
 	http.Redirect(w, r, uri, http.StatusFound)
 }
 
 func ReadEmailFromLoginPageAndRedirect(w http.ResponseWriter, r *http.Request) {
+
 	fmt.Println("code read email:>", r.URL.Query().Get("code"))
 	reqId := r.Header.Get("X-Request-ID")
 	fmt.Println("reqId:>", reqId)
