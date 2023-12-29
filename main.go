@@ -1,6 +1,7 @@
 package main
 
 import (
+	"alice_onviz/models"
 	"bytes"
 	"crypto/rand"
 	"encoding/base64"
@@ -43,11 +44,11 @@ func InfoAboutUserDevices(w http.ResponseWriter, r *http.Request) {
 	reqId := r.Header.Get("X-Request-ID")
 	fmt.Println("values_x_request_id:>", reqId)
 
-	response := Response{
+	response := models.Response{
 		RequestID: reqId,
-		Payload: Payload{
+		Payload: models.Payload{
 			UserID: "onviz123",
-			Devices: []Device{
+			Devices: []models.Device{
 				{
 					ID:          "device1",
 					Name:        "Device 1",
@@ -66,7 +67,7 @@ func InfoAboutUserDevices(w http.ResponseWriter, r *http.Request) {
 						"property1": map[string]interface{}{"color": "blue"},
 						"property2": map[string]interface{}{"temperature": 25},
 					},
-					DeviceInfo: DeviceInfo{
+					DeviceInfo: models.DeviceInfo{
 						Manufacturer: "ABC Corp",
 						Model:        "Model XYZ",
 						HWVersion:    "1.0",
