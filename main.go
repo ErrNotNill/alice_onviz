@@ -62,7 +62,7 @@ func InitRouter() {
 	http.HandleFunc("/api/refresh_token", RefreshToken)
 
 	http.HandleFunc("/api/yandex_id_token", YandexIdToken)
-
+	http.HandleFunc("/api/auth_code", GetAuthCode)
 }
 
 // here we get token
@@ -72,8 +72,12 @@ func YandexIdToken(w http.ResponseWriter, r *http.Request) {
 
 var AuthCode string
 
+func GetAuthCode(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("code auth:>", r.URL.Query().Get("code"))
+}
+
 func ReadEmailFromLoginPageAndRedirect(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("code:>", r.URL.Query().Get("code"))
+	fmt.Println("code read email:>", r.URL.Query().Get("code"))
 	reqId := r.Header.Get("X-Request-ID")
 	fmt.Println("reqId:>", reqId)
 
