@@ -47,31 +47,17 @@ func InfoAboutUserDevices(w http.ResponseWriter, r *http.Request) {
 	response := models.Response{
 		RequestID: reqId,
 		Payload: models.Payload{
-			UserID: "onviz123",
+			UserID: "Misha-01-super-545",
 			Devices: []models.Device{
 				{
-					ID:          "device1",
-					Name:        "Device 1",
-					Description: "Example device",
-					Room:        "Living Room",
-					Type:        "Smart Light",
-					CustomData: map[string]string{
-						"key1": "value1",
-						"key2": "value2",
-					},
-					Capabilities: map[string]interface{}{
-						"capability1": map[string]interface{}{"on_off": true},
-						"capability2": map[string]interface{}{"brightness": 50},
-					},
+					ID:          "abc-123",
+					Name:        "лампa",
+					Description: "цветная лампа",
+					Room:        "спальня",
+					Type:        "devices.types.light",
 					Properties: map[string]interface{}{
 						"property1": map[string]interface{}{"color": "blue"},
 						"property2": map[string]interface{}{"temperature": 25},
-					},
-					DeviceInfo: models.DeviceInfo{
-						Manufacturer: "ABC Corp",
-						Model:        "Model XYZ",
-						HWVersion:    "1.0",
-						SWVersion:    "2.1",
 					},
 				},
 				// Add more devices as needed
