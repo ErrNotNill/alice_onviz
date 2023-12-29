@@ -76,10 +76,10 @@ func GetAuthCode(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("code auth:>", r.URL.Query().Get("code"))
 	//code := r.URL.Query().Get("code")
 
-	fmt.Println("client_id:>", r.URL.Query().Get("client_id"))
-	fmt.Println("redirect_uri:>", r.URL.Query().Get("redirect_uri"))
-	fmt.Println("response_type:>", r.URL.Query().Get("response_type"))
-	fmt.Println("state:>", r.URL.Query().Get("state"))
+	fmt.Println("GetAuthCode client_id:>", r.URL.Query().Get("client_id"))
+	fmt.Println("GetAuthCode redirect_uri:>", r.URL.Query().Get("redirect_uri"))
+	fmt.Println("GetAuthCode response_type:>", r.URL.Query().Get("response_type"))
+	fmt.Println("GetAuthCode state:>", r.URL.Query().Get("state"))
 
 	//http.Redirect(w, r, "https://oauth.yandex.ru/authorize?response_type=code&client_id=4fed8408c435482b950afeb2d6e0f3cc&redirect_uri=https://onviz-api.ru/api/auth_code", http.StatusFound)
 }
@@ -126,6 +126,11 @@ func ReadEmailFromLoginPageAndRedirect(w http.ResponseWriter, r *http.Request) {
 }
 
 func LoginPage(w http.ResponseWriter, r *http.Request) {
+	fmt.Println("LoginPage client_id:>", r.URL.Query().Get("client_id"))
+	fmt.Println("LoginPage redirect_uri:>", r.URL.Query().Get("redirect_uri"))
+	fmt.Println("LoginPage response_type:>", r.URL.Query().Get("response_type"))
+	fmt.Println("LoginPage state:>", r.URL.Query().Get("state"))
+
 	reqId := r.Header.Get("X-Request-ID")
 	fmt.Println("reqId:>", reqId)
 	fmt.Println("code:>", r.URL.Query().Get("code"))
