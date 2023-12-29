@@ -40,17 +40,16 @@ func CallThatUserUnlink(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("string(rdr) CallThatUserUnlink", string(rdr))
 }
 func InfoAboutUserDevices(w http.ResponseWriter, r *http.Request) {
-	reqId := r.Header.Values("X-Request-ID")
+	reqId := r.Header.Get("X-Request-ID")
 	fmt.Println("values_x_request_id:>", reqId)
 
-	newReq := fmt.Sprintf(`
-{
-  "request_id": %v,
-  "payload": {
-      "user_id": "onviz123",
-      "devices": [
-        {
-          ID:          "device1",
+	response := Response{
+		RequestID: reqId,
+		Payload: Payload{
+			UserID: "onviz123",
+			Devices: []Device{
+				{
+					ID:          "device1",
 					Name:        "Device 1",
 					Description: "Example device",
 					Room:        "Living Room",
@@ -59,13 +58,13 @@ func InfoAboutUserDevices(w http.ResponseWriter, r *http.Request) {
 						"key1": "value1",
 						"key2": "value2",
 					},
-					Capabilities: map[string]Capability{
-						"capability1": {"on_off", true},
-						"capability2": {"brightness", 50},
+					Capabilities: map[string]interface{}{
+						"capability1": map[string]interface{}{"on_off": true},
+						"capability2": map[string]interface{}{"brightness": 50},
 					},
-					Properties: map[string]Property{
-						"property1": {"color", "blue"},
-						"property2": {"temperature", 25},
+					Properties: map[string]interface{}{
+						"property1": map[string]interface{}{"color": "blue"},
+						"property2": map[string]interface{}{"temperature": 25},
 					},
 					DeviceInfo: DeviceInfo{
 						Manufacturer: "ABC Corp",
@@ -73,17 +72,20 @@ func InfoAboutUserDevices(w http.ResponseWriter, r *http.Request) {
 						HWVersion:    "1.0",
 						SWVersion:    "2.1",
 					},
-        ...
-      ]
-  }
-}`, reqId)
-	jsonData, err := json.MarshalIndent(newReq, "", "  ")
+				},
+				// Add more devices as needed
+			},
+		},
+	}
+
+	// Convert struct to JSON
+	jsonData, err := json.Marshal(response)
 	if err != nil {
 		panic(err)
 	}
 
 	// Print JSON
-	println(string(jsonData))
+	fmt.Println(string(jsonData))
 
 	rdr, _ := io.ReadAll(r.Body)
 	fmt.Println("string(rdr) InfoAboutUserDevices", string(rdr))
