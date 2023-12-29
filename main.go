@@ -36,10 +36,12 @@ func CheckAccessForEndpoint(w http.ResponseWriter, r *http.Request) {
 	rdr, _ := io.ReadAll(r.Body)
 	fmt.Println("string(rdr) CheckAccessForEndpoint", string(rdr))
 }
+
 func CallThatUserUnlink(w http.ResponseWriter, r *http.Request) {
 	rdr, _ := io.ReadAll(r.Body)
 	fmt.Println("string(rdr) CallThatUserUnlink", string(rdr))
 }
+
 func InfoAboutUserDevices(w http.ResponseWriter, r *http.Request) {
 	reqId := r.Header.Get("X-Request-ID")
 	fmt.Println("values_x_request_id:>", reqId)
@@ -81,14 +83,18 @@ func InfoAboutUserDevices(w http.ResponseWriter, r *http.Request) {
 	// Print JSON
 	fmt.Println(string(jsonData))
 
-	rdr, _ := io.ReadAll(r.Body)
-	fmt.Println("string(rdr) InfoAboutUserDevices", string(rdr))
+	rdrBody, _ := io.ReadAll(r.Body)
+	fmt.Println("string(rdr) InfoAboutUserDevices", string(rdrBody))
+	respBody, _ := io.ReadAll(r.Response.Body)
+	fmt.Println("string(rdr) InfoAboutUserDevices respBody>>>>", string(respBody))
+
 }
 
 func InfoAboutUserDevicesState(w http.ResponseWriter, r *http.Request) {
 	rdr, _ := io.ReadAll(r.Body)
 	fmt.Println("string(rdr) InfoAboutUserDevicesState", string(rdr))
 }
+
 func ChangeDevicesState(w http.ResponseWriter, r *http.Request) {
 	rdr, _ := io.ReadAll(r.Body)
 	fmt.Println("string(rdr) ChangeDevicesState", string(rdr))
