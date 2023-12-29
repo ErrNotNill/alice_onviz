@@ -13,12 +13,17 @@ import (
 )
 
 var (
-	ClientId     string
-	RedirectUri  string
+	ClientID     string
+	RedirectURL  string
 	ResponseType string
 	State        string
 	UserEmail    string
 )
+
+// here we get token
+func YandexIdToken(w http.ResponseWriter, r *http.Request) {
+	//https://onviz-api.ru/api/yandex/token
+}
 
 func main() {
 
@@ -65,23 +70,14 @@ func InitRouter() {
 	http.HandleFunc("/api/auth_code", GetAuthCode)
 }
 
-// here we get token
-func YandexIdToken(w http.ResponseWriter, r *http.Request) {
-	//https://onviz-api.ru/api/yandex/token
-}
-
 var AuthCode string
 
 func GetAuthCode(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("code auth:>", r.URL.Query().Get("code"))
 	//code := r.URL.Query().Get("code")
-
-	fmt.Println("GetAuthCode client_id:>", r.URL.Query().Get("client_id"))
-	fmt.Println("GetAuthCode redirect_uri:>", r.URL.Query().Get("redirect_uri"))
-	fmt.Println("GetAuthCode response_type:>", r.URL.Query().Get("response_type"))
-	fmt.Println("GetAuthCode state:>", r.URL.Query().Get("state"))
-
-	//http.Redirect(w, r, "https://oauth.yandex.ru/authorize?response_type=code&client_id=4fed8408c435482b950afeb2d6e0f3cc&redirect_uri=https://onviz-api.ru/api/auth_code", http.StatusFound)
+	//uri := fmt.Sprintf("https://social.yandex.net/broker/redirect?response_type=code&client_id=4fed8408c435482b950afeb2d6e0f3cc&redirect_uri=https://onviz-api.ru/api/auth_code")
+	uri := fmt.Sprintf("https://social.yandex.net/broker/redirect?code=%v&state=%v&client_id=%v&scope=email", AuthCode, State, ClientID)
+	http.Redirect(w, r, uri, http.StatusFound)
 }
 
 func ReadEmailFromLoginPageAndRedirect(w http.ResponseWriter, r *http.Request) {
@@ -126,10 +122,10 @@ func ReadEmailFromLoginPageAndRedirect(w http.ResponseWriter, r *http.Request) {
 }
 
 func LoginPage(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("LoginPage client_id:>", r.URL.Query().Get("client_id"))
-	fmt.Println("LoginPage redirect_uri:>", r.URL.Query().Get("redirect_uri"))
-	fmt.Println("LoginPage response_type:>", r.URL.Query().Get("response_type"))
-	fmt.Println("LoginPage state:>", r.URL.Query().Get("state"))
+	ClientID = r.URL.Query().Get("client_id")
+	RedirectURL = r.URL.Query().Get("redirect_uri")
+	ResponseType = r.URL.Query().Get("response_type")
+	State = r.URL.Query().Get("state")
 
 	reqId := r.Header.Get("X-Request-ID")
 	fmt.Println("reqId:>", reqId)
@@ -144,15 +140,6 @@ func LoginPage(w http.ResponseWriter, r *http.Request) {
 		log.Println("error:", err)
 	}
 	ts.Execute(w, r)
-}
-
-func GetFirstAuthValues(w http.ResponseWriter, r *http.Request) {
-	ClientId = r.URL.Query().Get("client_id")
-	RedirectUri = r.URL.Query().Get("redirect_uri")
-	ResponseType = r.URL.Query().Get("response_type")
-	State = r.URL.Query().Get("state")
-
-	http.Redirect(w, r, "https://onviz-api.ru/api/login", http.StatusFound)
 }
 
 func AccessToken(w http.ResponseWriter, r *http.Request) {
@@ -176,4 +163,13 @@ func generateRandomString() (string, error) {
 		return "", err
 	}
 	return base64.URLEncoding.EncodeToString(b), nil
+}
+
+func GetFirstAuthValues(w http.ResponseWriter, r *http.Request) {
+	//ClientId = r.URL.Query().Get("client_id")
+	//RedirectUri = r.URL.Query().Get("redirect_uri")
+	//ResponseType = r.URL.Query().Get("response_type")
+	//State = r.URL.Query().Get("state")
+
+	//http.Redirect(w, r, "https://onviz-api.ru/api/login", http.StatusFound)
 }
