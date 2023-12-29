@@ -73,11 +73,12 @@ func YandexIdToken(w http.ResponseWriter, r *http.Request) {
 var AuthCode string
 
 func ReadEmailFromLoginPageAndRedirect(w http.ResponseWriter, r *http.Request) {
-	reqId := r.Header.Get("x-request-id")
+
+	reqId := r.Header.Get("X-Request-ID")
 	fmt.Println("reqId:>", reqId)
-	fmt.Println("redirect started :...")
+
 	http.Redirect(w, r, "https://oauth.yandex.ru/authorize?response_type=code&client_id=4fed8408c435482b950afeb2d6e0f3cc&redirect_uri=https://social.yandex.net/broker/redirect", http.StatusFound)
-	fmt.Println("redirect ended :...")
+
 	body := []byte(``)
 	fmt.Println("code:>", r.URL.Query().Get("code"))
 	//code := r.URL.Query().Get("code")
@@ -113,7 +114,7 @@ func ReadEmailFromLoginPageAndRedirect(w http.ResponseWriter, r *http.Request) {
 }
 
 func LoginPage(w http.ResponseWriter, r *http.Request) {
-	reqId := r.Header.Get("x-request-id")
+	reqId := r.Header.Get("X-Request-ID")
 	fmt.Println("reqId:>", reqId)
 	fmt.Println("code:>", r.URL.Query().Get("code"))
 
