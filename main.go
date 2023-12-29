@@ -74,6 +74,14 @@ var AuthCode string
 
 func GetAuthCode(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("code auth:>", r.URL.Query().Get("code"))
+	//code := r.URL.Query().Get("code")
+
+	fmt.Println("client_id:>", r.URL.Query().Get("client_id"))
+	fmt.Println("redirect_uri:>", r.URL.Query().Get("redirect_uri"))
+	fmt.Println("response_type:>", r.URL.Query().Get("response_type"))
+	fmt.Println("state:>", r.URL.Query().Get("state"))
+
+	//http.Redirect(w, r, "https://oauth.yandex.ru/authorize?response_type=code&client_id=4fed8408c435482b950afeb2d6e0f3cc&redirect_uri=https://onviz-api.ru/api/auth_code", http.StatusFound)
 }
 
 func ReadEmailFromLoginPageAndRedirect(w http.ResponseWriter, r *http.Request) {
