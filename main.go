@@ -36,10 +36,12 @@ func CheckAccessForEndpoint(w http.ResponseWriter, r *http.Request) {
 	rdr, _ := io.ReadAll(r.Body)
 	fmt.Println("string(rdr) CheckAccessForEndpoint", string(rdr))
 }
+
 func CallThatUserUnlink(w http.ResponseWriter, r *http.Request) {
 	rdr, _ := io.ReadAll(r.Body)
 	fmt.Println("string(rdr) CallThatUserUnlink", string(rdr))
 }
+
 func InfoAboutUserDevices(w http.ResponseWriter, r *http.Request) {
 	reqId := r.Header.Get("X-Request-ID")
 	fmt.Println("values_x_request_id:>", reqId)
@@ -82,15 +84,20 @@ func InfoAboutUserDevices(w http.ResponseWriter, r *http.Request) {
 	// Convert struct to JSON
 	jsonData, err := json.Marshal(response)
 	if err != nil {
-		panic(err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
 	}
 
-	// Print JSON
-	fmt.Println(string(jsonData))
+	// Set content type header
+	w.Header().Set("Content-Type", "application/json")
+
+	// Write the JSON response
+	w.Write(jsonData)
 
 	rdr, _ := io.ReadAll(r.Body)
 	fmt.Println("string(rdr) InfoAboutUserDevices", string(rdr))
 }
+
 func InfoAboutUserDevicesState(w http.ResponseWriter, r *http.Request) {
 	rdr, _ := io.ReadAll(r.Body)
 	fmt.Println("string(rdr) InfoAboutUserDevicesState", string(rdr))
