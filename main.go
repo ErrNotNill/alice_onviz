@@ -84,6 +84,13 @@ func InfoAboutUserDevices(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		panic(err)
 	}
+	w.Header().Set("Content-Type", "application/json")
+
+	// Write the JSON response
+	_, err = w.Write(jsonData)
+	if err != nil {
+		fmt.Println(err)
+	}
 
 	// Print JSON
 	fmt.Println(string(jsonData))
