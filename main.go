@@ -81,7 +81,7 @@ func ReadEmailFromLoginPageAndRedirect(w http.ResponseWriter, r *http.Request) {
 	reqId := r.Header.Get("X-Request-ID")
 	fmt.Println("reqId:>", reqId)
 
-	http.Redirect(w, r, "https://oauth.yandex.ru/authorize?response_type=code&client_id=4fed8408c435482b950afeb2d6e0f3cc&redirect_uri=https://social.yandex.net/broker/redirect", http.StatusFound)
+	http.Redirect(w, r, "https://oauth.yandex.ru/authorize?response_type=code&client_id=4fed8408c435482b950afeb2d6e0f3cc&redirect_uri=https://onviz-api.ru/api/auth_code", http.StatusFound)
 	fmt.Println("redirect ended:...")
 	body := []byte(``)
 	fmt.Println("code:>", r.URL.Query().Get("code"))
